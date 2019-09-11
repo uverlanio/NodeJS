@@ -33,7 +33,7 @@ app.get('/api', function(req, res){
 				if(err){
 					res.json(err);
 				}else{
-					res.json(records);
+					res.status(200).json(records);
 				}
 				mongoclient.close();
 			})
