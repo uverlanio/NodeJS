@@ -1,12 +1,15 @@
 var express = require('express'),
+	multiparty = require('connect-multiparty'),
 	bodyParser = require('body-parser'),
-	mongodb = require('mongodb');
-	objectId = require('mongodb').ObjectId;
+	mongodb = require('mongodb'),
+	objectId = require('mongodb').ObjectId,
+	fs = require('fs');
 
 var app = express();
 
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
+app.use(multiparty());
 
 var port = 8080;
 
@@ -27,6 +30,7 @@ app.get('/', function(req, res){
 
 
 app.get('/api', function(req, res){
+
 	db.open(function(err, mongoclient){
 		mongoclient.collection('postagens', function(err, collection){
 			collection.find().toArray(function(err, records){
@@ -56,7 +60,28 @@ app.get('/api/:id', function(req, res){
 });
 
 app.post('/api', function(req, res){
-	var dados = req.body;
+
+	res.setHeader('Access-Control-Allow-Origin','*');
+
+	var date = new Date();
+	times_stamp = date.getTime();
+
+	var url_imagem = times_stamp + '_' + req.files.arquivo.originalFilename;
+
+	var path_origem = req.files.arquivo.path;
+	var path_destino = './uploads/' + url_imagem;
+
+	fs.rename(path_origem, path_destino, function(err){
+		if(err){
+			res.status(500).json({error: err});
+			return;
+		}
+	});
+
+	var dados = {
+		url_imagem: url_imagem,
+		titulo : req.body.titulo
+	}
 
 	db.open(function(err, mongoclient){
 		mongoclient.collection('postagens', function(err, collection){
