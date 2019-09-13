@@ -4,9 +4,9 @@
 		<meta charset="UTF-8">
 
 		<title>Instagram Clone - WEB</title>
-		
+		<link rel="shortcut icon" href="">
 		<!-- JQuery -->
-		<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+		<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 
 		<!-- bootstrap - link cdn -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
@@ -16,6 +16,35 @@
 
 		<script>
 			$(document).ready(function(){
+
+				function carrega_postagens(){
+
+					var xhr = new XMLHttpRequest();
+
+					xhr.onload = function(){
+						
+						if(xhr.status == 200){
+							var data = $.parseJSON(xhr.responseText);
+
+							for(i = 0; i < data.length; i++){
+								$('#container_timeline').append(
+									'<div class="publicacao">'+
+									'<span class="titulo">' + data[i].titulo +
+									'</span>'+
+									'<img src="http://localhost:8080/imagens' + data[i].url_imagem +'" />' + 
+									'</div>'
+									);
+							}
+						}else{
+							alert(xhr.status);
+						}
+					};
+					xhr.open("GET","http:/localhost:8080/api", true);
+					xhr.send();
+
+				}
+
+				carrega_postagens();
 
 				$('#btn_incluir').click(function(){
 					$('#container_timeline').hide();
