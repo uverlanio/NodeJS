@@ -64,7 +64,7 @@
 
 							xhr.onreadystatechange = function(){
 								if(xhr.readyState == 4){
-									alert(xhr.responseText);
+									window.location.href = '/home';
 							}
 						}
 							xhr.send();
@@ -82,7 +82,7 @@
 
 							xhr.onreadystatechange = function(){
 								if(xhr.readyState == 4){
-									alert(xhr.responseText);
+									window.location.href = '/home';
 							}
 						}
 							xhr.send(JSON.stringify({comentario : comentario}));

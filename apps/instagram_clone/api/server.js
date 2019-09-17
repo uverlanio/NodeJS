@@ -146,19 +146,27 @@ app.put('/api/:id', function(req, res){
 	});
 });
 
+// O objetivo é apagar o comentário pelo id do comentário
 app.delete('/api/:id', function(req, res){
-	res.send(req.params.id)
-	/*db.open(function(err, mongoclient){
+	
+	db.open(function(err, mongoclient){
 		mongoclient.collection('postagens', function(err, collection){
-			collection.remove({ _id : objectId(req.params.id)},	function(err, records){
-				if(err){
-					res.json(err);
-				}else{
-					res.json(records);
-				}
+			collection.update(
+				{},	
+				{ $pull : {
+							comentarios : {id_comentario : objectId(req.params.id)}
+							}
+				},
+				{ multi : true},
+				function(err, records){
+					if(err){
+						res.json(err);
+					}else{
+						res.json(records);
+					}
 			
 			mongoclient.close();
-			})
-		})
-	})*/
-})
+			});
+		});
+	});
+});
